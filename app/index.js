@@ -1,3 +1,4 @@
+import document from "document";
 import { Accelerometer } from "accelerometer";
 import { Barometer } from "barometer";
 import { Gyroscope } from "gyroscope";
@@ -92,3 +93,10 @@ function sensorDataCollection() {
       }
     }, FREQUENCY_INTERVALS_IN_MS);
 }
+
+// UI interaction
+const pauseStartButton = document.getElementById("pauseStartButton");
+
+pauseStartButton.addEventListener("click", (evt) => {
+  console.log("CLICKED");
+})

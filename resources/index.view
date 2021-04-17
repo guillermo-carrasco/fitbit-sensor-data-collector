@@ -1,3 +1,2 @@
-<svg>
-  <text id="status" />
-</svg>
+
+<use id="pauseStartButton" href="#text-button" class="text-button bottom application-fill" />
