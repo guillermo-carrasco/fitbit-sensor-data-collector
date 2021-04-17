@@ -17,6 +17,8 @@ messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
 
+// Initial status of the application will be paused
+let PAUSED = true;
 
 // Start data collection in intervals of 100 milliseconds
 function sensorDataCollection() {
@@ -78,7 +80,7 @@ function sensorDataCollection() {
 
   // Send a new data sample to the companion app every interval. The variables are updated asyncronously
   setInterval(() => {
-      if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+      if (!PAUSED && messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
         messaging.peerSocket.send({
           timestamp: new Date().getTime(),
           accel_x: accel_data.x,
@@ -98,5 +100,10 @@ function sensorDataCollection() {
 const pauseStartButton = document.getElementById("pauseStartButton");
 
 pauseStartButton.addEventListener("click", (evt) => {
-  console.log("CLICKED");
+  if(PAUSED) {
+    pauseStartButton.text = "START";
+  } else {
+    pauseStartButton.text = "PAUSE";
+  }
+  PAUSED = !PAUSED
 })
