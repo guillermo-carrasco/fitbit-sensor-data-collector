@@ -6,7 +6,7 @@
   "fitbit": {
     "appUUID": "fdecf852-3cc2-4eab-9181-88e68d31550f",
     "appType": "app",
-    "appDisplayName": "Test companion",
+    "appDisplayName": "Sensor Data Collector",
     "iconFile": "resources/icon.png",
     "wipeColor": "#607d8b",
     "requestedPermissions": [
@@ -18,9 +18,12 @@
     ],
     "i18n": {
       "en-US": {
-        "name": "Test companion"
+        "name": "Sensor Data Collector"
       }
     },
     "defaultLanguage": "en-US"
+  },
+  "scripts": {
+    "build": "fitbit-build"
   }
 }
