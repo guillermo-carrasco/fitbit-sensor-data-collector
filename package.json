@@ -1,7 +1,8 @@
 {
   "devDependencies": {
     "@fitbit/sdk": "~5.0.0",
-    "@fitbit/sdk-cli": "^1.7.3"
+    "@fitbit/sdk-cli": "^1.7.3",
+    "messaging": "^0.0.2"
   },
   "fitbit": {
     "appUUID": "fdecf852-3cc2-4eab-9181-88e68d31550f",
@@ -25,5 +26,12 @@
   },
   "scripts": {
     "build": "fitbit-build"
+  },
+  "dependencies": {
+    "accelerometer": "^1.2.0",
+    "barometer": "^1.0.0",
+    "document": "^0.4.7",
+    "gyroscope": "^0.0.0-1",
+    "orientation": "^0.2.0"
   }
 }

@@ -1,2 +1,30 @@
+<svg>
+  <svg x="0" y="0" width="100%" height="80%">
+      <use id="labelList" href="#tile-list" class="horizontal-pad">
 
-<use id="pauseStartButton" href="#text-button" class="text-button bottom application-fill" />
+        <use id="jumping_jack" href="#my-item">
+          <set href="#text" attributeName="text-buffer" to="Jumping Jacks"/>
+        </use>
+
+        <use id="high_knees" href="#my-item">
+          <set href="#text" attributeName="text-buffer" to="High Knees" />
+        </use>
+
+        <use id="push_up" href="#my-item">
+          <set href="#text" attributeName="text-buffer" to="Push Ups" />
+        </use>
+
+        <use id="squat" href="#my-item">
+          <set href="#text" attributeName="text-buffer" to="Squats" />
+        </use>
+
+        <use id="other" href="#my-item">
+          <set href="#text" attributeName="text-buffer" to="Other" />
+        </use>
+      </use>
+  </svg>
+
+  <svg x="0" y="80%" width="100%" height="20%">
+    <use id="pauseStartButton" href="#text-button" class="text-button bottom application-fill" />
+  </svg>
+</svg>

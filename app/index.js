@@ -8,6 +8,11 @@ import * as messaging from "messaging";
 
 const FREQUENCY_INTERVALS_IN_MS = 100;
 
+// Initial status of the application will be paused
+let PAUSED = true;
+
+let current_label = "";
+
 messaging.peerSocket.addEventListener("open", (evt) => {
   console.log('Connection opened with companion app!')
   sensorDataCollection();
@@ -16,9 +21,6 @@ messaging.peerSocket.addEventListener("open", (evt) => {
 messaging.peerSocket.addEventListener("error", (err) => {
   console.error(`Connection error: ${err.code} - ${err.message}`);
 });
-
-// Initial status of the application will be paused
-let PAUSED = true;
 
 // Start data collection in intervals of 100 milliseconds
 function sensorDataCollection() {
@@ -58,12 +60,6 @@ function sensorDataCollection() {
         y: gyro.y ? gyro.y.toFixed(3) : 0,
         z: gyro.z ? gyro.z.toFixed(3) : 0,
       };
-      console.log(
-        `ts: ${gyro.timestamp}, \
-         x: ${gyro.x}, \
-         y: ${gyro.y}, \
-         z: ${gyro.z}`
-      );
     });
     gyro.start();
   }
@@ -90,20 +86,49 @@ function sensorDataCollection() {
           gyro_x: gyro_data.x,
           gyro_y: gyro_data.y,
           gyro_z: gyro_data.z,
-          orientation: orient_data.quaternion
+          orientation: orient_data.quaternion,
+          label: current_label
         });
       }
     }, FREQUENCY_INTERVALS_IN_MS);
 }
+////////////////////
+// UI interaction //
+////////////////////
 
-// UI interaction
+// Pause/Start button
 const pauseStartButton = document.getElementById("pauseStartButton");
 
 pauseStartButton.addEventListener("click", (evt) => {
   if(PAUSED) {
-    pauseStartButton.text = "START";
-  } else {
     pauseStartButton.text = "PAUSE";
+  } else {
+    pauseStartButton.text = "START";
   }
   PAUSED = !PAUSED
 })
+
+// Labels list setup
+
+let list = document.getElementById("labelList");
+let items = list.getElementsByClassName("list-item");
+
+function uncheck_all_except_selected(index_new) {
+  items.forEach((element, index) => {
+    if (index === index_new) {
+      current_label = element.id
+      element.class += ' selected'
+    } else {
+      element.class = element.class.split(' ')[0]
+    }
+  });
+}
+uncheck_all_except_selected(0)
+
+
+items.forEach((element, index) => {
+  let touch = element.getElementById("touch");
+  touch.onclick = (evt) => {
+    uncheck_all_except_selected(index)
+  };
+});
