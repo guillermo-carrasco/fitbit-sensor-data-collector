@@ -86,7 +86,10 @@ function sensorDataCollection() {
           gyro_x: gyro_data.x,
           gyro_y: gyro_data.y,
           gyro_z: gyro_data.z,
-          orientation: orient_data.quaternion,
+          orientation_s: orient_data.quaternion[0],
+          orientation_x: orient_data.quaternion[1],
+          orientation_y: orient_data.quaternion[2],
+          orientation_z: orient_data.quaternion[3],
           label: current_label
         });
       }
