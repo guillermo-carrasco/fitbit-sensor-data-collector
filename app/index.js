@@ -8,14 +8,18 @@ import * as messaging from "messaging";
 
 const FREQUENCY_INTERVALS_IN_MS = 100;
 
+const accel = new Accelerometer({ frequency: FREQUENCY_INTERVALS_IN_MS });
+const barometer = new Barometer({ frequency: FREQUENCY_INTERVALS_IN_MS });
+const gyro = new Gyroscope({ frequency: FREQUENCY_INTERVALS_IN_MS });
+const orientation = new OrientationSensor({ frequency: FREQUENCY_INTERVALS_IN_MS });
+
 // Initial status of the application will be paused
 let PAUSED = true;
 
 let current_label = "";
 
 messaging.peerSocket.addEventListener("open", (evt) => {
-  console.log('Connection opened with companion app!')
-  sensorDataCollection();
+  setUpSensorDataCollection();
 });
 
 messaging.peerSocket.addEventListener("error", (err) => {
@@ -23,17 +27,16 @@ messaging.peerSocket.addEventListener("error", (err) => {
 });
 
 // Start data collection in intervals of 100 milliseconds
-function sensorDataCollection() {
+function setUpSensorDataCollection() {
 
   // Initialise sensor data holders
   let accel_data = {x: null, y: null, z: null}
   let baro_data = {pressure: null}
   let gyro_data = {x: null, y: null, z: null}
-  let orient_data = {quaternion: null}
+  let orient_data = {quaternion: [null, null, null, null]}
 
   // Start sensors at the same sampling frequency than the interval we send messages to the companion app
   if (Accelerometer) {
-    const accel = new Accelerometer({ frequency: FREQUENCY_INTERVALS_IN_MS });
     accel.addEventListener("reading", () => {
       accel_data = {
           x: accel.x ? accel.x.toFixed(3) : 0,
@@ -41,19 +44,15 @@ function sensorDataCollection() {
           z: accel.z ? accel.z.toFixed(3) : 0
       };
     });
-    accel.start();
   }
   if (Barometer) {
-      const barometer = new Barometer({ frequency: FREQUENCY_INTERVALS_IN_MS });
       barometer.addEventListener("reading", () => {
         baro_data = {
           pressure: barometer.pressure ? parseInt(barometer.pressure) : 0
         };
       });
-      barometer.start();
   }
   if (Gyroscope) {
-    const gyro = new Gyroscope({ frequency: FREQUENCY_INTERVALS_IN_MS });
     gyro.addEventListener("reading", () => {
       gyro_data = {
         x: gyro.x ? gyro.x.toFixed(3) : 0,
@@ -61,16 +60,13 @@ function sensorDataCollection() {
         z: gyro.z ? gyro.z.toFixed(3) : 0,
       };
     });
-    gyro.start();
   }
   if (OrientationSensor) {
-    const orientation = new OrientationSensor({ frequency: FREQUENCY_INTERVALS_IN_MS });
     orientation.addEventListener("reading", () => {
       orient_data = {
         quaternion: orientation.quaternion ? orientation.quaternion.map(n => n.toFixed(3)) : null
       };
     });
-    orientation.start();
   }
 
 
@@ -95,6 +91,22 @@ function sensorDataCollection() {
       }
     }, FREQUENCY_INTERVALS_IN_MS);
 }
+
+function startSensors() {
+  accel.start();
+  barometer.start();
+  gyro.start();
+  orientation.start();
+}
+
+function stopSensors() {
+  accel.stop();
+  barometer.stop();
+  gyro.stop();
+  orientation.stop();
+}
+
+
 ////////////////////
 // UI interaction //
 ////////////////////
@@ -105,8 +117,10 @@ const pauseStartButton = document.getElementById("pauseStartButton");
 pauseStartButton.addEventListener("click", (evt) => {
   if(PAUSED) {
     pauseStartButton.text = "PAUSE";
+    startSensors();
   } else {
     pauseStartButton.text = "START";
+    stopSensors();
   }
   PAUSED = !PAUSED
 })
