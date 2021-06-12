@@ -73,7 +73,7 @@ function setUpSensorDataCollection() {
   // Send a new data sample to the companion app every interval. The variables are updated asyncronously
   setInterval(() => {
       if (!PAUSED && messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-        messaging.peerSocket.send({
+        let record = {
           timestamp: new Date().getTime(),
           accel_x: accel_data.x,
           accel_y: accel_data.y,
@@ -87,7 +87,8 @@ function setUpSensorDataCollection() {
           orientation_y: orient_data.quaternion[2],
           orientation_z: orient_data.quaternion[3],
           label: current_label
-        });
+        }
+        messaging.peerSocket.send(record);
       }
     }, FREQUENCY_INTERVALS_IN_MS);
 }
